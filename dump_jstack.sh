@@ -10,6 +10,10 @@ PID=$1
 DURATION=$2
 OUTPUT_DIR=stats_capture/jstack_files/
 
+if [ ! -d "$OUTPUT_DIR" ]; then
+  mkdir -p $OUTPUT_DIR
+fi
+
 for i in  $( seq 1 $2 )
 do
   TIME=`date +%s`

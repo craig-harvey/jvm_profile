@@ -20,7 +20,7 @@ if [ -z $DURATION ]
 fi
 
 ## TOP - Create Header for output file
-echo "Timestamp,load_average,cpu_user,cpu_system,cpu_idle,cpu_wait,cpu_hw_interrupts,cpu_sw_interrupts,cpu_pyhsical_cpu_wait,mem_total,mem_free,mem_used,mem_buffered,swap_total,swap_free,swap_used,swap_avail" > top.stats
+echo "Timestamp,load_average,cpu_user,cpu_system,cpu_idle,cpu_wait,cpu_hw_interrupts,cpu_sw_interrupts,cpu_pyhsical_cpu_wait,mem_total,mem_free,mem_used,mem_buffered,swap_total,swap_free,swap_used,swap_avail" > stats_capture/top.stats
 
 ## Print the required fields from top  (See Comment above)
 ## NB: The below awk column numbers may change depending on distro
