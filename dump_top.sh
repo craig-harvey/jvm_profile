@@ -8,7 +8,7 @@
 #       - timestamp
 #       TOP stats:
 #       - Load average (for the last minute)
-#       - CPU: user, system, idle, wait, hw_interrupts, sw_interrupts, physical_cpu_wait
+#       - CPU: user, system, idle, wait, hw_interrupts, sw_interrupts, physical_cpu_wait (Note: We omit ni)
 #       - MEM: total, free, used, buffered
 #       - SWAP: total, free, used, available
 
@@ -24,7 +24,7 @@ echo "Timestamp,load_average,cpu_user,cpu_system,cpu_idle,cpu_wait,cpu_hw_interr
 
 ## Print the required fields from top  (See Comment above)
 ## NB: The below awk column numbers may change depending on distro
-PRINT_LOAD='NR==1{printf ",%s", $10}'
+PRINT_LOAD='NR==1{printf ",%s,", $12}'
 PRINT_CPU='NR==3{printf "%s,%s,%s,%s,%s,%s,%s,",$2,$4,$8,$10,$12,$14,$16}'
 PRINT_MEM='NR==4{printf "%s,%s,%s,%s,",$4,$6,$8,$10}'
 PRINT_SWP='NR==5{print $3","$5","$7","$9}'
