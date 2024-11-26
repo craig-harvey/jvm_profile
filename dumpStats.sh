@@ -42,4 +42,6 @@ done
 rm -f stats_capture/heap_end.hprof
 jmap -dump:live,format=b,file=stats_capture/heap_end.hprof $1
 
-
+# Compress the output directory
+rm -f stats.tgz
+tar -czf stats.tgz stats_capture/
