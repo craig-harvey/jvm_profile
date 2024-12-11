@@ -9,10 +9,7 @@ fi
 PID=$1
 DURATION=$2
 OUTPUT_DIR=stats_capture/jstack_files/
-
-if [ ! -d "$OUTPUT_DIR" ]; then
-  mkdir -p $OUTPUT_DIR
-fi
+mkdir -p $OUTPUT_DIR
 
 for i in  $( seq 1 $2 )
 do
