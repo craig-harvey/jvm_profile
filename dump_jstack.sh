@@ -8,7 +8,8 @@ fi
 
 PID=$1
 DURATION=$2
-OUTPUT_DIR=stats_capture/jstack_files/
+OUTPUT_DIR=/tmp/jvmstats_capture/jstack_files/
+
 mkdir -p $OUTPUT_DIR
 
 for i in  $( seq 1 $2 )

@@ -12,7 +12,7 @@ fi
 
 PID=$1
 DURATION=$2
-OUTPUT_FILE=stats_capture/thread.stats
+OUTPUT_FILE=/tmp/jvmstats_capture/thread.stats
 
 ## Create Header for output file
 echo "timestamp,thread_id,exec_time" > $OUTPUT_FILE

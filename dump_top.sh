@@ -4,8 +4,8 @@
 #
 # Input - Takes a variable for the number of seconds to record for, otherwise runs top once and exits.
 
-# Output 
-# 
+# Output
+#
 #   top.stats: Capture system level stats from the first 5 lines from `top`, prepending a unix timestamp to each line.
 #
 #   stats captured:
@@ -23,7 +23,7 @@ if [ -z $DURATION ]
 fi
 
 ## TOP - Create Header for output file
-echo "Timestamp,load_average,cpu_user,cpu_system,cpu_idle,cpu_wait,cpu_hw_interrupts,cpu_sw_interrupts,cpu_physical_cpu_wait,mem_total,mem_free,mem_used,mem_buffered,swap_total,swap_free,swap_used,swap_avail" > stats_capture/top.stats
+echo "Timestamp,load_average,cpu_user,cpu_system,cpu_idle,cpu_wait,cpu_hw_interrupts,cpu_sw_interrupts,cpu_physical_cpu_wait,mem_total,mem_free,mem_used,mem_buffered,swap_total,swap_free,swap_used,swap_avail" > /tmp/jvmstats_capture/top.stats
 
 ## Print the required fields from top  (See Comment above)
 ## NB: The below awk column numbers may change depending on distro
@@ -35,7 +35,8 @@ PRINT_SWP='NR==5{print $3","$5","$7","$9}'
 for i in  $( seq 1 $1 )
 do
   DATE=`date +%s | tr -d \"\n\"`
-  top -b -n 1 | eval "awk -v timestamp=$DATE ' $PRINT_LOAD $PRINT_CPU $PRINT_MEM $PRINT_SWP' >> stats_capture/top.stats"
+  top -b -n 1 | eval "awk -v timestamp=$DATE ' $PRINT_LOAD $PRINT_CPU $PRINT_MEM $PRINT_SWP' >> /tmp/jvmstats_capture/top.stats"
   sleep 1
 done
+
 

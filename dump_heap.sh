@@ -21,11 +21,11 @@ COUNT=$(($2 / 30 - 1))
 for i in  $( seq 1 $COUNT )
 do
   DATE=`date +"%Y-%m-%d_%H:%M:%S"`
-  jmap -dump:live,format=b,file=stats_capture/heap_$DATE.hprof $1 2>&1
+  jmap -dump:live,format=b,file=/tmp/jvmstats_capture/heap_$DATE.hprof $1 2>&1
   sleep 30
 done
 
 # Do a final heap dump of the java process
 rm -f stats_capture/heap_end.hprof
-jmap -dump:live,format=b,file=stats_capture/heap_end.hprof $1 2>&1
+jmap -dump:live,format=b,file=/tmp/jvmstats_capture/heap_end.hprof $1 2>&1
 

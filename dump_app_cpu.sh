@@ -2,7 +2,7 @@
 
 #
 # Uses `top` to dump % cpu utilisation for all jboss apps
-# 
+#
 # Due to `top` typically displaying each app on a separate line, some crazy awk was used
 # to consolidate the rows of CPU data from top into a single line.
 #
@@ -21,21 +21,25 @@ if [ -z $DURATION ]
 fi
 
 # Create the header by getting all the java apps by name and sorting them by PID
-ps -ef | grep java | sort -nk2 | grep -o '\[[^]]*\]' | grep -v pcid | awk '{printf ",%s", $0}' | awk '{printf "timestamp%s\n", $0}' > stats_capture/appcpu.stats
+ps -ef | grep java | sort -nk2 | grep -o '\[[^]]*\]' | grep -v pcid | awk '{printf ",%s", $0}' | awk '{printf "timestamp%s\n", $0}' > /tmp/jvmstats_capture/appcpu.stats
 
 # Determine the number of Java apps we will be working with
 NUM_APPS=`top -b -n 1 -p $(pgrep -d, java) | grep jboss | wc -l`
 
-# In RHEL, the top command will print the stats since last invocation, which could be a while,
-# So we use top -n 2 and delete the first set of rows returned (Which is equal to the number of java apps)
+# In RHEL, the top command will print the stats since last invocation, which is not a current state view.
+# So we use top -n 2 and delete the first set of rows returned. 
 SED_CMD="1,${NUM_APPS}d"
 
 #
-# Loop for every second until it reaches the desired execution time
+# Loop until it reaches the desired duration 
+# NB: `top -b -n 2` can take a while to iterate (Roughly 2s), so only loop for the desired duration
 #
-for i in $(seq 1 $1 )
+DATE=`date +%s | tr -d \"\n\"`
+FINISH_TIME=$(($DATE + $DURATION))
+
+while [ $DATE -le $FINISH_TIME ]
 do
   DATE=`date +%s | tr -d \"\n\"`
-  top -b -n 2 -p $(pgrep -d, java) |  grep java | sed $SED_CMD | sort -nk1 | eval "awk 'NR % $NUM_APPS == 1 {printf \"%s\", $DATE} {printf \",%s\", \$9} NR % $NUM_APPS == 0 {printf \"\\n\"}'" >> stats_capture/appcpu.stats
+  top -b -n 2 -p $(pgrep -d, java) |  grep jboss | sed $SED_CMD | sort -nk1 | eval "awk 'NR % $NUM_APPS == 1 {printf \"%s\", $DATE} {printf \",%s\", \$9} NR % $NUM_APPS == 0 {printf \"\\n\"}'" >> /tmp/jvmstats_capture/appcpu.stats
 done
 

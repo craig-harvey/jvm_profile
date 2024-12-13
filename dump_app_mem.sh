@@ -21,7 +21,7 @@ if [ -z $DURATION ]
 fi
 
 # Create the header by getting all the java apps by name and sorting them by PID
-ps -ef | grep java | sort -nk2 | grep -o '\[[^]]*\]' | grep -v pcid | awk '{printf ",%s", $0}' | awk '{printf "timestamp%s\n", $0}' > stats_capture/appmem.stats
+ps -ef | grep java | sort -nk2 | grep -o '\[[^]]*\]' | grep -v pcid | awk '{printf ",%s", $0}' | awk '{printf "timestamp%s\n", $0}' > /tmp/jvmstats_capture/appmem.stats
 
 # Determine the number of Java apps we will be working with
 NUM_APPS=`top -b -n 1 -p $(pgrep -d, java) | grep jboss | wc -l`
@@ -31,11 +31,14 @@ NUM_APPS=`top -b -n 1 -p $(pgrep -d, java) | grep jboss | wc -l`
 SED_CMD="1,${NUM_APPS}d"
 
 #
-# Loop for every second until it reaches the desired execution time
+# Loop until it reaches the desired duration
+# NB: `top -b -n 2` can take a while to iterate (Roughly 2s), so only loop for the desired duration
 #
-for i in $(seq 1 $1 )
+DATE=`date +%s | tr -d \"\n\"`
+FINISH_TIME=$(($DATE + $DURATION))
+
+while [ $DATE -le $FINISH_TIME ]
 do
   DATE=`date +%s | tr -d \"\n\"`
-  top -b -n 2 -p $(pgrep -d, java) |  grep java | sed $SED_CMD | sort -nk1 | eval "awk 'NR % $NUM_APPS == 1 {printf \"%s\", $DATE} {printf \",%s\", \$10} NR % $NUM_APPS == 0 {printf \"\\n\"}'" >> stats_capture/appmem.stats
+  top -b -n 2 -p $(pgrep -d, java) |  grep jboss | sed $SED_CMD | sort -nk1 | eval "awk 'NR % $NUM_APPS == 1 {printf \"%s\", $DATE} {printf \",%s\", \$10} NR % $NUM_APPS == 0 {printf \"\\n\"}'" >> /tmp/jvmstats_capture/appmem.stats
 done
-

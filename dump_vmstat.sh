@@ -13,7 +13,7 @@ if [ $# -ne 1 ]; then
 fi
 
 DURATION=$1
-OUTPUT_FILE=stats_capture/vmstat.stats
+OUTPUT_FILE=/tmp/jvmstats_capture/vmstat.stats
 OUTPUT_DIR=`dirname $OUTPUT_FILE`
 
 if [ ! -d $OUTPUT_DIR ]; then
