@@ -29,6 +29,8 @@ sh dump_threads.sh $1 $2 &
 sh dump_jstack.sh $1 $2 &
 sh dump_vmstat.sh $2 &
 sh dump_heap.sh $1 $2 &
+sh dump_app_cpu.sh $2 &
+sh dump_app_mem.sh $2 &
 
 # Wait for the duration so all sub scripts can complete
 # TODO - Progress bar
